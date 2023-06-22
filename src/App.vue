@@ -6,20 +6,42 @@ export default{
   data(){
 
     return{
-      toDos:[]
+      toDos:[],
+      newTask:{
+        taskName: "",
+        taskDone: false,
+      },
+    }
+
+  },
+  
+  methods:{
+
+    onSubmit(){
+
+      const url = "http://localhost/eserciziBoolean/php-todo-list-json/toDoList/server/addTask.php";
+      const headers = {
+            headers: {"Content-Type": "multipart/form-data"}
+      };
+
+      axios.post(url, this.newTask, headers).then(response => {
+        this.toDos = response.data
+        this.newTask.taskName = ""
+      })
+
     }
 
   },
 
   mounted(){
 
-    axios.get("http://localhost/eserciziBoolean/php-todo-list-json/toDoList/server/")
+    axios.get("http://localhost/eserciziBoolean/php-todo-list-json/toDoList/server/index.php")
     .then(response => {
       this.toDos = response.data;
-      console.log(this.toDos);
     })
 
   }
+  
 }
 
 </script>
@@ -30,6 +52,13 @@ export default{
 <ul>
   <li v-for="(toDo, index) in toDos" :key="index">{{ toDo.taskName }}</li>
 </ul>
+
+<form @submit.prevent="onSubmit">
+ 
+  <input type="text" placeholder="My new task..." name="text" id="text" v-model="newTask.taskName">
+  <input type="submit" value="add task">
+
+</form>
 
   <!-- Todo
 Dobbiamo creare una web-app che permetta di leggere e scrivere una lista di Todo. Deve essere anche gestita la persistenza dei dati leggendoli da, e scrivendoli in un file JSON.
