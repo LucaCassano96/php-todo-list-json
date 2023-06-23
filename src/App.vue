@@ -29,6 +29,24 @@ export default{
         this.newTask.taskName = ""
       })
 
+    },
+
+    deleteTask(index){
+      
+      const url = "http://localhost/eserciziBoolean/php-todo-list-json/toDoList/server/deleteTask.php";
+
+      const headers = {
+        headers: {"Content-Type": "multipart/form-data"}
+      };
+
+      const taskToDelete = {
+        index:index
+      }
+
+      axios.post(url, taskToDelete, headers).then(response => {
+        this.toDos = response.data
+      })
+      
     }
 
   },
@@ -50,7 +68,10 @@ export default{
 
 
 <ul>
-  <li v-for="(toDo, index) in toDos" :key="index">{{ toDo.taskName }}</li>
+  <li v-for="(toDo, index) in toDos" :key="index">{{ toDo.taskName }}
+  <span @click="deleteTask(index)">X</span>
+  </li>
+  
 </ul>
 
 <form @submit.prevent="onSubmit">
@@ -79,5 +100,10 @@ Abilitare l’eliminazione di un task -->
 </template>
 
 <style scoped>
+
+
+span{
+  cursor: pointer;
+}
 
 </style>
