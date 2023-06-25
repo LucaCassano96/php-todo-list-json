@@ -6,19 +6,16 @@ header("Content-Type: application/json");
 
 $todosDB = "toDos.json";
 
-$task = $_POST;
+$taskIndexObject = $_POST;
+$taskIndex = $taskIndexObject['index'];
 
 $todosStr = file_get_contents($todosDB);
 $todos = json_decode($todosStr);
 
-$task['taskDone'] = filter_var($task['taskDone'], FILTER_VALIDATE_BOOLEAN);
-$todos[] = $task;
+$todos[$taskIndex] -> taskDone = !$todos[$taskIndex] -> taskDone;
 
 $encodedTodos = json_encode($todos);
 
 file_put_contents($todosDB,$encodedTodos);
 
 echo $encodedTodos;
-
-
-

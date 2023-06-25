@@ -1,4 +1,5 @@
 <script >
+
 import axios from 'axios';
 
 export default{
@@ -47,6 +48,22 @@ export default{
         this.toDos = response.data
       })
       
+    },
+
+    doneUndone(index){
+      const url = "http://localhost/eserciziBoolean/php-todo-list-json/toDoList/server/doneUndone.php";
+
+      const headers = {
+        headers: {"Content-Type": "multipart/form-data"}
+      };
+
+      const taskToDoneUndone = {
+        index:index
+      }
+
+      axios.post(url, taskToDoneUndone, headers).then(response => {
+        this.toDos = response.data
+      })
     }
 
   },
@@ -68,8 +85,8 @@ export default{
 
 
 <ul>
-  <li v-for="(toDo, index) in toDos" :key="index">{{ toDo.taskName }}
-  <span @click="deleteTask(index)">X</span>
+  <li v-for="(toDo, index) in toDos" :key="index" @click="doneUndone(index) " :class="toDo.taskDone === false ? '' : 'done'" >{{ toDo.taskName }}
+    <i @click="deleteTask(index)" class="fa-solid fa-circle-xmark"></i>
   </li>
   
 </ul>
@@ -81,20 +98,6 @@ export default{
 
 </form>
 
-  <!-- Todo
-Dobbiamo creare una web-app che permetta di leggere e scrivere una lista di Todo. Deve essere anche gestita la persistenza dei dati leggendoli da, e scrivendoli in un file JSON.
-
-Nello svolgere l’esercizio seguite un approccio graduale. Prima assicuratevi che la vostra pagina index (front-end) riesca a comunicare correttamente con il vostro script PHP (back-end API).
-
-Lo step successivo è quello di "testare" l'invio di un nuovo task, sapendo che manca comunque la persistenza lato server (ancora non memorizzate i dati da nessuna parte).
-
-Solo a questo punto sarà utile passare alla lettura della lista da un file JSON.
-
-Bonus
-Mostrare lo stato del task → se completato, barrare il testo
-Permettere di segnare un task come completato facendo click sul testo
-Permettere il toggle del task (completato/non completato)
-Abilitare l’eliminazione di un task -->
 
   
 </template>
@@ -102,8 +105,15 @@ Abilitare l’eliminazione di un task -->
 <style scoped>
 
 
-span{
+i{
   cursor: pointer;
+  margin-left: 20px;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.done{
+  text-decoration: line-through;
 }
 
 </style>
